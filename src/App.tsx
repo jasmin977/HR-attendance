@@ -71,7 +71,7 @@ const toMins = (t: string): number => {
 // Round a minute value to the nearest quarter-hour (±10 min).
 // Applied to worked duration and extra/under so that minor clock
 
-const roundQ10 = (mins: number): number => Math.round(mins / 5) * 5;
+const roundQ10 = (mins: number): number => Math.round(mins / 15) * 15;
 
 const fmtHHMM = (m: number | null | undefined): string => {
   if (m == null || isNaN(m)) return "—";
