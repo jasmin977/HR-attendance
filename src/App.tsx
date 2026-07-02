@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useCallback, useRef } from "react";
 import type { ChangeEvent, KeyboardEvent } from "react";
 import * as XLSX from "xlsx";
@@ -326,7 +326,7 @@ export default function App(): React.ReactNode {
   const [overrides, setOverrides] = useState<Record<string, Override>>({});
   const [result, setResult] = useState<AnalyzedDay[] | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
-
+  const [month, setMonth] = useState<string>("");
   const daysOff: Set<string> = data
     ? new Set([
         ...getDatesForWeekdays(data.records, restWeekdays),
@@ -334,6 +334,32 @@ export default function App(): React.ReactNode {
       ])
     : extraDaysOff;
 
+  useEffect(() => {
+    if (!data?.records?.length) return;
+
+    const validRecord = data.records.find((r) => r.date);
+
+    if (!validRecord) return;
+
+    const monthNumber = validRecord.date.split("/")[1];
+
+    const months = [
+      "janvier",
+      "février",
+      "mars",
+      "avril",
+      "mai",
+      "juin",
+      "juillet",
+      "août",
+      "septembre",
+      "octobre",
+      "novembre",
+      "décembre",
+    ];
+
+    setMonth(months[Number(monthNumber) - 1]);
+  }, [data]);
   // ── File loading ────────────────────────────────────────────────────────────
   const load = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0];
@@ -519,8 +545,6 @@ export default function App(): React.ReactNode {
     const H: number = doc.internal.pageSize.getHeight();
     const mg = 12;
     let y = mg;
-
-    const month = "mai";
 
     // Header
     doc.setFillColor(248, 250, 252);
@@ -998,7 +1022,7 @@ export default function App(): React.ReactNode {
                   </span>
                 </div>
                 <div style={{ fontSize: 13, color: "#64748b" }}>
-                  {data.emp?.dept} · Mars 2026 · {data.records.length}{" "}
+                  {data.emp?.dept} · {month} 2026 · {data.records.length}{" "}
                   enregistrements
                 </div>
               </div>
