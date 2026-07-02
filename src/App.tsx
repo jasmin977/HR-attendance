@@ -1,10 +1,6 @@
-import {
-  useState,
-  useCallback,
-  useRef,
-  ChangeEvent,
-  KeyboardEvent,
-} from "react";
+import React from "react";
+import { useState, useCallback, useRef } from "react";
+import type { ChangeEvent, KeyboardEvent } from "react";
 import * as XLSX from "xlsx";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -271,7 +267,7 @@ const STATUS_CFG: Record<DayStatus, StatusConfig> = {
   },
 };
 
-const Chip = ({ status }: { status: DayStatus }): JSX.Element => {
+const Chip = ({ status }: { status: DayStatus }): React.ReactNode => {
   const c = STATUS_CFG[status] ?? STATUS_CFG.working;
   return (
     <span
@@ -317,7 +313,7 @@ const getDatesForWeekdays = (
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 
-export default function App(): JSX.Element {
+export default function App(): React.ReactNode {
   const [data, setData] = useState<{
     emp: Employee | null;
     records: RawRecord[];
@@ -365,10 +361,12 @@ export default function App(): JSX.Element {
 
   // ── Extra days off ──────────────────────────────────────────────────────────
   const addExtraDaysOff = (): void => {
-    const vals = daysOffInput
-      .split(",")
-      .map((v) => v.trim())
-      .filter(Boolean);
+    const vals =
+      daysOffInput
+        ?.split(",")
+        .map((v) => v.trim())
+        .filter(Boolean) ?? [];
+
     setExtraDaysOff(new Set([...extraDaysOff, ...vals]));
     setDaysOffInput("");
   };
